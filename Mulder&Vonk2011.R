@@ -47,14 +47,15 @@ p <- ggplot(fauna, aes(x=Mass, color = TAX.MORPHON)) +
         axis.text.y=element_blank())
 p
 
-
+# group by taxon and get average, standard dev and number of obs
 masses = fauna %>% group_by(TAX.MORPHON) %>% 
   summarise(AvgMass = mean(Mass),
             StDevMass = sd(Mass),
             N = n())
+# tibbles suck
 masses = as.data.frame(masses)
 
-
+# https://msalganik.wordpress.com/2017/01/21/making-sense-of-the-rlnorm-function-in-r/
 m <- 26.4783
 s <- 3.821168e+01
 location <- log(m^2 / sqrt(s^2 + m^2))
@@ -70,7 +71,9 @@ hist(rlnormTrunc(10000,
                               sdlog = shape)),
      breaks = 1000)
 
-
+# function to get a sample of random data that follows a log-normal distribution 
+# and has arithmetic mean of m and a standard deviation of s
+# p determines truncation at desired percentile interval (.9 gives the 90th)
 rlnormtrunc.intuitive = function(n, m, s, p=.9) {
   trnc <- EnvStats::rlnormTrunc(n, 
                      meanlog = log(m^2 / sqrt(s^2 + m^2)), 
@@ -85,14 +88,14 @@ rlnormtrunc.intuitive = function(n, m, s, p=.9) {
 }
 
 
-hist(rlnormtrunc.intuitive(100000, 26.4783, 3.821168e+01),
+hist(rlnormtrunc.intuitive(10000, 26.4783, 3.821168e+01),
      breaks = 1000)
 plot(density(rlnormtrunc.intuitive(100000, 26.4783, 3.821168e+01)))
 
 
-par(mfrow=c(46,46))
+#par(mfrow=c(46,46))
 for (i in 1:91) {
-  try(hist(rlnormtrunc.intuitive(100000, 
+  try(hist(rlnormtrunc.intuitive(10000, 
                                  masses[i,2], 
                                  masses[i,3],
                                  .98),
