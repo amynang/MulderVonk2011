@@ -47,13 +47,33 @@ p <- ggplot(fauna, aes(x=Mass, color = TAX.MORPHON)) +
         axis.text.y=element_blank())
 p
 
-# group by taxon and get average, standard dev and number of obs
+# # group by taxon and get average, standard dev and number of obs
+# masses = fauna %>% group_by(TAX.MORPHON) %>% 
+#   summarise(AvgMass = mean(Mass),
+#             StDevMass = sd(Mass),
+#             N = n())
+# # tibbles suck
+# masses = as.data.frame(masses)
+
+
+
+# http://nemaplex.ucdavis.edu/Ecology/nematode_weights.htm
+# Body Mass of nematodes may be calculated using the Andrássy (1956) formula 
+# W = (L*D2)/(1.6*106) where W is the mass (as fresh weight μg) per individual, 
+# L is the nematode length (μm) and D is the greatest body diameter (μm).
+
+fauna <- fauna %>% mutate(Andrassy = (Length*Width^2)/(1.6*10^6),
+                          .keep = "all",
+                          .after = Width)
+
 masses = fauna %>% group_by(TAX.MORPHON) %>% 
-  summarise(AvgMass = mean(Mass),
-            StDevMass = sd(Mass),
-            N = n())
+  summarise(N = n(),
+            feeding.type = first(Type.of.feeding.interaction),
+            AvgMass = mean(Andrassy),
+            StDevMass = sd(Andrassy))
 # tibbles suck
 masses = as.data.frame(masses)
+
 
 # https://msalganik.wordpress.com/2017/01/21/making-sense-of-the-rlnorm-function-in-r/
 m <- 26.4783
