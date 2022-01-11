@@ -65,6 +65,8 @@ p
 fauna <- fauna %>% mutate(Andrassy = (Length*Width^2)/(1.6*10^6),
                           .keep = "all",
                           .after = Width)
+# So Mulder and Vonk assume nematodes are 80% water
+plot(fauna$Mass,fauna$Andrassy)
 
 masses = fauna %>% group_by(TAX.MORPHON) %>% 
   summarise(N = n(),
@@ -73,7 +75,10 @@ masses = fauna %>% group_by(TAX.MORPHON) %>%
             StDevMass = sd(Andrassy))
 # tibbles suck
 masses = as.data.frame(masses)
-
+write.csv(masses, file = "Mulder&Vonk2011_bodymass&feeding.csv",
+          quote = F,
+          row.names = F,
+          sep = ",")
 
 # https://msalganik.wordpress.com/2017/01/21/making-sense-of-the-rlnorm-function-in-r/
 m <- 26.4783
