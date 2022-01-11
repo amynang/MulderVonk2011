@@ -75,10 +75,10 @@ masses = fauna %>% group_by(TAX.MORPHON) %>%
             StDevMass = sd(Andrassy))
 # tibbles suck
 masses = as.data.frame(masses)
-write.csv(masses, file = "Mulder&Vonk2011_bodymass&feeding.csv",
-          quote = F,
-          row.names = F,
-          sep = ",")
+write.csv2(masses, file = "Mulder&Vonk2011_bodymass&feeding.csv",
+           quote = F,
+           row.names = F,
+           sep = ";")
 
 # https://msalganik.wordpress.com/2017/01/21/making-sense-of-the-rlnorm-function-in-r/
 m <- 26.4783
