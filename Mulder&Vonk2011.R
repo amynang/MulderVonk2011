@@ -2,6 +2,7 @@ library(tidyverse)
 library(ggplot2)
 
 
+
 # get the data
 fauna = read.table("https://figshare.com/ndownloader/files/5620305", 
                    header = T,
